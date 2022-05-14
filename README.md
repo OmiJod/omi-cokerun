@@ -34,3 +34,6 @@ Items to add to qb-core>shared>items.lua
 - Get The Product Checked By The Boss
 - Get Coke Brick
 - Process The Brick and Get 8 Coke Packets
+
+# This is a Fork and the OG Resourse of @ProjectSloth 
+
