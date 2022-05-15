@@ -308,6 +308,47 @@ RegisterNetEvent('qb-cokerun:client:items', function()
     end, "casekey")
 end)
 
+-- RegisterNetEvent('qb-cokerun:client:items', function()
+--     QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
+--         if result then
+--             TriggerEvent("qb-dispatch:cokejob")
+--             exports["memorygame_2"]:thermiteminigame(8, 3, 2, 20,
+--             function() -- Success
+--                 TriggerEvent('animations:client:EmoteCommandStart', {"type3"})
+--                 QBCore.Functions.Progressbar("grab_case", Lang:t('info.unlocking_case'), 10000, false, true, {
+--                     disableMovement = true,
+--                     disableCarMovement = true,
+--                     disableMouse = false,
+--                     disableCombat = true,
+--                 }, {
+--                 }, {}, {}, function() -- Done
+--                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+--                     RemoveBlip(case)
+--                     TriggerServerEvent('qb-cokerun:server:unlock')
+
+--                     local playerPedPos = GetEntityCoords(PlayerPedId(), true)
+--                     local case = GetClosestObjectOfType(playerPedPos, 10.0, `prop_security_case_01`, false, false, false)
+--                     if (IsPedActiveInScenario(PlayerPedId()) == false) then
+--                     SetEntityAsMissionEntity(case, 1, 1)
+--                     DeleteEntity(case)
+--                     QBCore.Functions.Notify(Lang:t("success.you_removed_first_security_case"), 'success')
+--                     Itemtimemsg()
+--                 end
+--                 end, function()
+--                     TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+--                     QBCore.Functions.Notify(Lang:t("error.canceled"), 'error')
+--                 end)
+--             end,
+--             function() -- Fail thermite game
+--                 QBCore.Functions.Notify(Lang:t("error.you_failed"), 'error')
+--             end)
+--         else
+--             QBCore.Functions.Notify(Lang:t("error.you_cannot_do_this"), 'error')
+--         end
+
+--     end, "casekey")
+-- end)
+
 function DrawText3D(x, y, z, text)
 	SetTextScale(0.35, 0.35)
 	SetTextFont(4)
