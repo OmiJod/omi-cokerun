@@ -12,9 +12,8 @@ Items to add to qb-core>shared>items.lua
 
 
 # Dependencies
-* Qb-Lock - https://github.com/Nathan-FiveM/qb-lock
+* ps-ui - https://github.com/Project-Sloth/ps-ui
 * qb-target - https://github.com/BerkieBb/qb-target
-* boostinghack - https://github.com/Lionh34rt/boostinghack
 
 
 # Config - 
