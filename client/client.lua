@@ -151,28 +151,28 @@ RegisterNetEvent('qb-cokerun:client:start', function ()
     if CurrentCops >= Config.MinimumCokeJobPolice then
         QBCore.Functions.TriggerCallback("qb-cokerun:server:coolc",function(isCooldown)
             if not isCooldown then
-                local success = exports['qb-lock']:StartLockPickCircle(5, 8, success)
-                print(success)
-                if success then
-                    TriggerEvent('animations:client:EmoteCommandStart', {"idle11"})
-                    QBCore.Functions.Progressbar("start_job", Lang:t('info.talking_to_boss'), 10000, false, true, {
-                        disableMovement = true,
-                        disableCarMovement = true,
-                        disableMouse = false,
-                        disableCombat = true,
-                    }, {
-                    }, {}, {}, function() -- Done
-                        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                        TriggerServerEvent('qb-cokerun:server:startr')
-                        TriggerServerEvent('qb-cokerun:server:coolout')
-    
-                    end, function() -- Cancel
-                        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                        QBCore.Functions.Notify(Lang:t("error.canceled"), 'error')
-                    end)
-                else
-                    QBCore.Functions.Notify(Lang:t("Boss Does Not Trust You, You aint Stable"), 'error')
-                end
+                exports['ps-ui']:Circle(function(success)
+                    if success then
+                        TriggerEvent('animations:client:EmoteCommandStart', {"idle11"})
+                        QBCore.Functions.Progressbar("start_job", Lang:t('info.talking_to_boss'), 10000, false, true, {
+                            disableMovement = true,
+                            disableCarMovement = true,
+                            disableMouse = false,
+                            disableCombat = true,
+                        }, {
+                        }, {}, {}, function() -- Done
+                            TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                            TriggerServerEvent('qb-cokerun:server:startr')
+                            TriggerServerEvent('qb-cokerun:server:coolout')
+        
+                        end, function() -- Cancel
+                            TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                            QBCore.Functions.Notify(Lang:t("error.canceled"), 'error')
+                        end)
+                    else
+                        QBCore.Functions.Notify(Lang:t("Boss Does Not Trust You, You aint Stable"), 'error')
+                    end
+                end, 2, 20) -- NumberOfCircles, MS
             else
                 QBCore.Functions.Notify(Lang:t("error.someone_recently_did_this"), 'error')
             end
@@ -271,36 +271,38 @@ RegisterNetEvent('qb-cokerun:client:items', function()
     QBCore.Functions.TriggerCallback('QBCore:HasItem', function(result)
         if result then
             TriggerEvent("qb-dispatch:cokejob")
-            local result = exports['boostinghack']:StartHack()
-            if result then
-                TriggerEvent('animations:client:EmoteCommandStart', {"type3"})
-                QBCore.Functions.Progressbar("grab_case", Lang:t('info.unlocking_case'), 10000, false, true, {
-                    disableMovement = true,
-                    disableCarMovement = true,
-                    disableMouse = false,
-                    disableCombat = true,
-                }, {
-                }, {}, {}, function() -- Done
-                    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                    RemoveBlip(case)
-                    TriggerServerEvent('qb-cokerun:server:unlock')
-
-                    local playerPedPos = GetEntityCoords(PlayerPedId(), true)
-                    local case = GetClosestObjectOfType(playerPedPos, 10.0, `prop_security_case_01`, false, false, false)
-                    if (IsPedActiveInScenario(PlayerPedId()) == false) then
-                    SetEntityAsMissionEntity(case, 1, 1)
-                    DeleteEntity(case)
-                    QBCore.Functions.Notify(Lang:t("success.you_removed_first_security_case"), 'success')
-                    Itemtimemsg()
+            exports['ps-ui']:Scrambler(function(result)
+                if result then
+                    TriggerEvent('animations:client:EmoteCommandStart', {"type3"})
+                    QBCore.Functions.Progressbar("grab_case", Lang:t('info.unlocking_case'), 10000, false, true, {
+                        disableMovement = true,
+                        disableCarMovement = true,
+                        disableMouse = false,
+                        disableCombat = true,
+                    }, {
+                    }, {}, {}, function() -- Done
+                        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                        RemoveBlip(case)
+                        TriggerServerEvent('qb-cokerun:server:unlock')
+    
+                        local playerPedPos = GetEntityCoords(PlayerPedId(), true)
+                        local case = GetClosestObjectOfType(playerPedPos, 10.0, `prop_security_case_01`, false, false, false)
+                        if (IsPedActiveInScenario(PlayerPedId()) == false) then
+                        SetEntityAsMissionEntity(case, 1, 1)
+                        DeleteEntity(case)
+                        QBCore.Functions.Notify(Lang:t("success.you_removed_first_security_case"), 'success')
+                        Itemtimemsg()
+                    end
+                    end, function()
+                        TriggerEvent('animations:client:EmoteCommandStart', {"c"})
+                        QBCore.Functions.Notify(Lang:t("error.canceled"), 'error')
+                    end)
+                else
+                    QBCore.Functions.Notify(Lang:t("error.you_failed"), 'error')
+                    TriggerEvent("un-dispatch:cokerun")
                 end
-                end, function()
-                    TriggerEvent('animations:client:EmoteCommandStart', {"c"})
-                    QBCore.Functions.Notify(Lang:t("error.canceled"), 'error')
-                end)
-            else
-                QBCore.Functions.Notify(Lang:t("error.you_failed"), 'error')
-                TriggerEvent("un-dispatch:cokerun")
-            end
+            end, "numeric", 30, 0) -- Type (alphabet, numeric, alphanumeric, greek, braille, runes), Time (Seconds), Mirrored (0: Normal, 1: Normal + Mirrored 2: Mirrored only )
+            -- local result = exports['boostinghack']:StartHack()
         else
             QBCore.Functions.Notify(Lang:t("error.you_cannot_do_this"), 'error')
         end
